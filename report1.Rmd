@@ -11,6 +11,7 @@ library(reshape)
 df <- read.csv("~/Desktop/uni/thesis_repo/KVH_data.csv")
 months = names(df)[7:18]
 df['row_mean'] = apply(df[,months],1,mean)
+df['sd'] = apply(df[,months],1,sd)
 df$row_mean = sqrt(df$row_mean)
 ```
 
@@ -38,6 +39,16 @@ m_norm_by_mean['id'] = seq(1:220)
 m_norm_by_mean_long = melt(m_norm_by_mean[10:70,], id.vars=c('id'))
 ggplot(data=m_norm_by_mean_long, aes(x=variable, y=value, group=id)) + geom_line()
 ```
+
+#
+
+```{r}
+
+```
+
+# Plot on map
+Plotting unit values on a map (by Lat/Lon). Markers show the mean value of the monthly consumption and the color also reflects its value. It shows that mean values are grouping together.
+
 ```{r}
 library(leaflet)
 
@@ -47,4 +58,13 @@ mp <- leaflet(data = df) %>%
   addTiles() %>%  # Add default OpenStreetMap map tiles
   addCircleMarkers(~Lon, ~Lat, radius = ~row_mean/5, color=~pal(row_mean))
 mp
+```
+
+# Plotting standard deviation
+
+```{r}
+mp2 <- leaflet(data = df) %>%
+  addTiles() %>%  # Add default OpenStreetMap map tiles
+  addCircleMarkers(~Lon, ~Lat, radius = ~sd/150,)
+mp2
 ```
